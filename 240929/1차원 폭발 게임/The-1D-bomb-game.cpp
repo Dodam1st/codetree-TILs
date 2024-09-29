@@ -5,61 +5,45 @@ int n, m;
 int arr[101] = {};
 int result_cnt{0};
 
-bool check(){
-    int signal = false;
+bool check() {
+    bool signal = false;
     int temp = 0;
     int cnt = 0;
-    for(int i{0};i<result_cnt;i++){
-        if(i == 0){
-            temp = arr[i];
-            cnt = 1;
-            continue;
-        }
+    int write_idx = 0; 
 
-        if(arr[i] == temp){
+    for (int i = 0; i < result_cnt; ) {
+        temp = arr[i];
+        cnt = 0;
+
+        while (i < result_cnt && arr[i] == temp) {
             cnt++;
-        }
-        else{
-            if(cnt >= m && temp != 0){
-                signal = true;
-                for(int j{i};j<result_cnt;j++){
-                    arr[j - cnt] = arr[j];
-                }
-
-                result_cnt -= cnt;
-                i = i - cnt + 1;
-            }
-            temp = arr[i];
-            cnt = 1;
+            i++;
         }
 
-        if(i == result_cnt - 1){
-            if(cnt >= m && temp != 0){
-                signal = true;
-
-                result_cnt -= cnt;
-                i = i - cnt + 1;
+        if (cnt >= m) {
+            signal = true;
+        } else {
+            for (int j = 0; j < cnt; j++) {
+                arr[write_idx++] = temp;
             }
         }
     }
+
+    result_cnt = write_idx;
     return signal;
 }
 
 int main() {
     cin >> n >> m;
     result_cnt = n;
-    for(int i{0};i<n;i++){
+    for (int i = 0; i < n; i++) {
         cin >> arr[i];
     }
-    while(true){
-        if(!check()){
-            break;
-        }
-    }
+
+    while (check());
 
     cout << result_cnt << '\n';
-    for(int i{0};i<result_cnt;i++){
+    for (int i = 0; i < result_cnt; i++) {
         cout << arr[i] << "\n";
     }
-    return 0;
 }
